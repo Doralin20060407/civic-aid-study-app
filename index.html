@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172522">
+<title>Humanitarian × Civil Society｜8 Readings Study App</title>
+<style>
+:root{
+ --bg:#f5f1e8;--paper:#fffdf8;--ink:#17211e;--muted:#69716e;--line:#dcd6ca;
+ --dark:#172522;--accent:#e3563f;--yellow:#f3c84f;--teal:#3b7e73;--blue:#416a82;
+ --shadow:0 12px 34px rgba(30,39,35,.08);--navh:66px
+}
+[data-theme="dark"]{--bg:#111816;--paper:#18211e;--ink:#f1f2ed;--muted:#aab2ae;--line:#344039;--dark:#0c1210;--shadow:none}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.72}
+button,input,textarea{font:inherit} button{cursor:pointer}
+.topbar{position:sticky;top:0;z-index:50;height:var(--navh);background:color-mix(in srgb,var(--paper) 91%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 max(16px,env(safe-area-inset-left));gap:10px}
+.brand{font-weight:950;letter-spacing:-.03em;white-space:nowrap} .brand span{color:var(--accent)} .topspacer{flex:1}
+.iconbtn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:9px 11px}
+.search{width:min(360px,34vw);border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:9px 12px}
+.shell{display:grid;grid-template-columns:245px minmax(0,1fr);max-width:1440px;margin:auto;min-height:calc(100vh - var(--navh))}
+.sidebar{position:sticky;top:var(--navh);height:calc(100vh - var(--navh));border-right:1px solid var(--line);padding:18px 14px;overflow:auto}
+.sidebtn{width:100%;text-align:left;border:0;background:transparent;color:var(--muted);padding:10px 12px;border-radius:12px;margin:2px 0;font-weight:720}
+.sidebtn:hover,.sidebtn.active{background:var(--paper);color:var(--ink)} .sidehead{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--muted);padding:12px}
+.content{min-width:0;padding:34px clamp(18px,4vw,56px) 100px} .view{display:none;animation:fade .2s ease} .view.active{display:block}
+@keyframes fade{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{background:var(--dark);color:#fff;border-radius:28px;padding:clamp(28px,5vw,62px);position:relative;overflow:hidden}
+.hero:after{content:"POWER";position:absolute;right:-25px;bottom:-55px;font-size:clamp(7rem,20vw,16rem);font-weight:1000;color:#ffffff08;letter-spacing:-.08em}
+.kicker{color:var(--yellow);font-size:.76rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase} h1{font-size:clamp(2.5rem,6vw,5.6rem);line-height:.96;letter-spacing:-.055em;margin:.18em 0 .25em;max-width:980px}
+.hero p{max-width:880px;font-size:clamp(1.05rem,2vw,1.35rem);color:#d9e0dc;position:relative;z-index:2}
+.hero strong{color:white} h2{font-size:clamp(1.8rem,3.7vw,3.1rem);line-height:1.12;letter-spacing:-.035em;margin:.15em 0 .5em} h3{line-height:1.3}
+.section{margin-top:48px} .eyebrow{display:inline-block;font-size:.73rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px} .card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.card p:last-child{margin-bottom:0} .stat{font-size:2.6rem;line-height:1;font-weight:1000;color:var(--accent)} .muted{color:var(--muted)} .lead{font-size:1.18rem}
+.callout{background:#f4d55d;color:#1a211e;border:2px solid #1a211e;padding:22px;border-radius:16px;box-shadow:7px 7px 0 #1a211e;font-size:1.11rem;font-weight:760}
+.storyline{display:grid;gap:0} .stage{display:grid;grid-template-columns:60px 1fr;gap:14px;position:relative;padding-bottom:26px} .stage:not(:last-child):before{content:"";position:absolute;left:28px;top:52px;bottom:0;width:3px;background:var(--line)}
+.stageNum{width:56px;height:56px;border-radius:18px;background:var(--dark);color:#fff;display:grid;place-items:center;font-weight:950} .stageBox{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px}
+.reading-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px} .reading-card{position:relative;overflow:hidden} .reading-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--c)}
+.rmeta{font-size:.78rem;color:var(--muted)} .rtitle{font-size:1.15rem;font-weight:900;margin:8px 0} .thesis{font-weight:700}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px} .btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:11px;padding:8px 11px;font-weight:750} .btn.primary{background:var(--dark);color:white;border-color:var(--dark)} .btn.done{background:#e8f5ec;color:#245c37;border-color:#b9ddc4}
+.article-head{border-left:8px solid var(--c);padding:10px 0 10px 20px} .article-head .num{font-size:4rem;font-weight:1000;line-height:.8;color:color-mix(in srgb,var(--c) 35%,var(--muted))}
+.article-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start} .sticky-note{position:sticky;top:calc(var(--navh) + 18px)} textarea.note{width:100%;min-height:220px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);padding:12px;resize:vertical}
+.points{padding-left:1.2em} .points li{margin:.6em 0} .critical{background:color-mix(in srgb,var(--accent) 10%,var(--paper));border-left:5px solid var(--accent);padding:14px 16px;border-radius:0 13px 13px 0}
+.chips{display:flex;gap:7px;flex-wrap:wrap} .chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 9px;font-size:.78rem;color:var(--muted)}
+.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px} table{border-collapse:collapse;width:100%;min-width:900px;background:var(--paper)} th,td{border-bottom:1px solid var(--line);padding:12px 14px;text-align:left;vertical-align:top} th{position:sticky;top:0;background:var(--paper);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px} .concept-card{cursor:pointer} .concept-card .detail{display:none;color:var(--muted);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)} .concept-card.open .detail{display:block}
+.tension-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} .tension{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px} .vs{font-weight:1000;color:var(--accent)}
+.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px} .term{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:14px} .term b{color:var(--teal)}
+.quiz{background:var(--dark);color:white;border-radius:24px;padding:24px} .qopt{display:block;width:100%;text-align:left;border:1px solid #ffffff30;background:#ffffff0b;color:white;border-radius:11px;padding:11px 12px;margin:7px 0} .qopt:hover{background:#ffffff18} .qopt.good{background:#1e633a} .qopt.bad{background:#7b2f2a} .quizfeed{color:#ffd45f;font-weight:800;min-height:28px}
+.progress{height:8px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-bottom:18px} .progress span{display:block;height:100%;background:var(--yellow);width:0}
+.search-results{position:fixed;z-index:80;right:16px;top:62px;width:min(480px,calc(100vw - 32px));max-height:65vh;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px #0003;padding:10px;display:none} .search-results.show{display:block} .sitem{padding:10px;border-radius:10px;cursor:pointer} .sitem:hover{background:var(--bg)} .sitem b{display:block}
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:70;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:7px max(10px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom));grid-template-columns:repeat(4,1fr)} .mobile-nav button{border:0;background:transparent;color:var(--muted);font-size:.73rem;padding:6px} .mobile-nav button b{display:block;font-size:1.15rem}
+@media(max-width:920px){.shell{grid-template-columns:1fr}.sidebar{display:none}.content{padding:24px 16px 105px}.mobile-nav{display:grid}.article-layout{grid-template-columns:1fr}.sticky-note{position:static}.search{width:min(280px,48vw)}}
+@media(max-width:620px){.brand{font-size:.9rem}.search{width:44vw}.tension-grid{grid-template-columns:1fr}.tension{grid-template-columns:1fr}.vs{text-align:center}.hero{border-radius:20px;padding:28px 22px}.stage{grid-template-columns:46px 1fr}.stageNum{width:44px;height:44px;border-radius:14px}.stage:not(:last-child):before{left:21px;top:43px}}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CIVIC × AID">
+<meta name="description" content="Eight-reading interactive study app on humanitarian aid, civil society, funding, power, localisation and resistance.">
+
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">CIVIC × <span>AID</span></div>
+  <input id="searchBox" class="search" placeholder="搜尋 funding、localisation、AI…">
+  <div class="topspacer"></div>
+  <button class="iconbtn" onclick="toggleTheme()" title="切換深色模式">◐</button>
+</div>
+
+<div id="searchResults" class="search-results"></div>
+
+<div class="shell">
+<aside class="sidebar">
+  <div class="sidehead">Study App</div>
+  <button class="sidebtn active" data-view="home" onclick="showView('home',this)">⌂ 總覽</button>
+  <button class="sidebtn" data-view="path" onclick="showView('path',this)">→ 故事線閱讀</button>
+  <button class="sidebtn" data-view="library" onclick="showView('library',this)">▦ 八篇資料庫</button>
+  <button class="sidebtn" data-view="themes" onclick="showView('themes',this)">◎ 主題統整</button>
+  <button class="sidebtn" data-view="matrix" onclick="showView('matrix',this)">▤ 交叉比較</button>
+  <button class="sidebtn" data-view="glossary" onclick="showView('glossary',this)">Aa 詞彙表</button>
+  <button class="sidebtn" data-view="quiz" onclick="showView('quiz',this)">✓ 測驗</button>
+  <div class="sidehead">Reading progress</div>
+  <div class="card" style="padding:14px">
+    <div class="stat" id="progressNum">0/8</div>
+    <div class="muted">已完成閱讀</div>
+  </div>
+</aside>
+
+<main class="content">
+<section id="view-home" class="view active">
+  <div class="hero">
+    <div class="kicker">8 READINGS · ONE SYSTEM MAP</div>
+    <h1>Humanitarian Aid × Civil Society</h1>
+    <p>把八篇文章／報告重新排成一條完整故事：<strong>scarcity exposes power</strong>。當 funding、multilateralism 與 civic space 同時受壓，真正的改革不只是在「找更多錢」，而是重新設計 <strong>誰決定、誰承擔風險、誰被問責、誰能定義 success。</strong></p>
+  </div>
+
+  <div class="section">
+    <span class="eyebrow">THE MASTER ARGUMENT</span><h2>八篇其實在回答同一個問題</h2>
+    <div class="callout">當舊的 humanitarian / civil society funding order 開始崩解，我們要只是把舊系統「撐回去」，還是趁這個時刻重新分配 money、power、risk、voice 和 accountability？</div>
+  </div>
+
+  <div class="section">
+    <div class="grid">
+      <div class="card"><div class="stat">8</div><h3>Readings</h3><p class="muted">Aid policy、Geneva、IRC、innovative finance、Portal、flexible funding、youth civil society、CIVICUS 2026。</p></div>
+      <div class="card"><div class="stat">5</div><h3>Stages</h3><p class="muted">System shock → Operational adaptation → Legitimacy → Power shift → Resistance。</p></div>
+      <div class="card"><div class="stat">9</div><h3>Cross-cutting concepts</h3><p class="muted">Scarcity、efficiency、localisation、dignity、legitimacy、accountability、risk、sustainability、resistance。</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <span class="eyebrow">THE ONE-SENTENCE VERSION</span><h2>從「缺錢」一路走到「權力」</h2>
+    <div class="storyline">
+      <div class="stage"><div class="stageNum">1</div><div class="stageBox"><b>Funding crisis</b><br><span class="muted">Aid cuts 讓 system 無法維持原規模，也暴露 donor dependence。</span></div></div>
+      <div class="stage"><div class="stageNum">2</div><div class="stageBox"><b>Institutions adapt</b><br><span class="muted">IRC、UN、Geneva 開始談 efficiency、AI、pooled funds、new finance、downsizing。</span></div></div>
+      <div class="stage"><div class="stageNum">3</div><div class="stageBox"><b>But efficiency is not enough</b><br><span class="muted">更快、更便宜不自動等於更公平、更合法、更 local。</span></div></div>
+      <div class="stage"><div class="stageNum">4</div><div class="stageBox"><b>Power shift</b><br><span class="muted">Flexible funding、community philanthropy、participatory grantmaking 開始問誰有權決定資源與 success。</span></div></div>
+      <div class="stage"><div class="stageNum">5</div><div class="stageBox"><b>Autonomy becomes resistance</b><br><span class="muted">Civil society 最終需要資源與自主性，是為了能 litigation、mobilise、document、protect、organise、resist。</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="view-path" class="view">
+  <span class="eyebrow">GUIDED READING PATH</span><h2>第一次讀，照這條線最容易懂</h2>
+  <p class="lead">不是照出版時間，而是照「問題怎麼一步一步變深」排列。</p>
+  <div id="pathList"></div>
+</section>
+
+<section id="view-library" class="view">
+  <span class="eyebrow">8-READING LIBRARY</span><h2>八篇資料庫</h2>
+  <p class="muted">每篇都有 thesis、白話故事線、5 個重點、critical lens、私人筆記與閱讀進度。</p>
+  <div id="libraryGrid" class="reading-grid"></div>
+  <div id="articleDetail" class="section"></div>
+</section>
+
+<section id="view-themes" class="view">
+  <span class="eyebrow">CROSS-READING SYNTHESIS</span><h2>不要按文章讀，改按概念讀</h2>
+  <p class="lead">點開卡片，看同一個概念如何在不同文章中逐步變化。</p>
+  <div id="conceptGrid" class="concept-grid"></div>
+  <div class="section">
+    <span class="eyebrow">KEY TENSIONS</span><h2>這八篇最值得拿來寫 essay 的矛盾</h2>
+    <div class="tension-grid">
+      <div class="tension"><div><b>Efficiency</b><br><span class="muted">每一美元更多 impact</span></div><div class="vs">VS</div><div><b>Equity</b><br><span class="muted">最難量化的人會不會被犧牲？</span></div></div>
+      <div class="tension"><div><b>Innovation</b><br><span class="muted">AI、private finance、forecast</span></div><div class="vs">VS</div><div><b>Legitimacy</b><br><span class="muted">誰監督 technology / investors？</span></div></div>
+      <div class="tension"><div><b>Localisation</b><br><span class="muted">把責任交給 local actors</span></div><div class="vs">VS</div><div><b>Abandonment</b><br><span class="muted">錢與 power 有沒有一起下去？</span></div></div>
+      <div class="tension"><div><b>Flexibility</b><br><span class="muted">grantee 可以 adapt</span></div><div class="vs">VS</div><div><b>Accountability</b><br><span class="muted">誰有權問「你做得好不好」？</span></div></div>
+      <div class="tension"><div><b>Private capital</b><br><span class="muted">填補 public funding gap</span></div><div class="vs">VS</div><div><b>Public responsibility</b><br><span class="muted">國家／donor 是否因此退場？</span></div></div>
+      <div class="tension"><div><b>Institutional survival</b><br><span class="muted">保住 agency / NGO</span></div><div class="vs">VS</div><div><b>Community need</b><br><span class="muted">institution 是否還真的有用？</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="view-matrix" class="view">
+  <span class="eyebrow">COMPARE ALL 8</span><h2>八篇交叉比較</h2>
+  <div class="matrix-wrap"><table id="matrixTable"><thead><tr><th>Reading</th><th>它認為最大的問題</th><th>主要解法</th><th>真正的權力問題</th><th>Critical lens</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="view-glossary" class="view">
+  <span class="eyebrow">ENGLISH TOOLKIT</span><h2>跨八篇共用詞彙</h2>
+  <div class="glossary" id="glossaryGrid"></div>
+</section>
+
+<section id="view-quiz" class="view">
+  <span class="eyebrow">ACTIVE RECALL</span><h2>統整理解測驗</h2>
+  <div class="quiz">
+    <div class="progress"><span id="quizBar"></span></div>
+    <h3 id="quizQ"></h3>
+    <div id="quizOpts"></div>
+    <div id="quizFeed" class="quizfeed"></div>
+    <button id="quizNext" class="btn" style="display:none;background:#f3c84f;color:#17211e" onclick="nextQuiz()">下一題 →</button>
+  </div>
+</section>
+</main>
+</div>
+
+<nav class="mobile-nav">
+<button onclick="showView('home')"><b>⌂</b>總覽</button>
+<button onclick="showView('path')"><b>→</b>故事線</button>
+<button onclick="showView('library')"><b>▦</b>八篇</button>
+<button onclick="showView('themes')"><b>◎</b>主題</button>
+</nav>
+
+<script>
+const readings=[{"id": "aid2026", "n": "01", "title": "What’s shaping aid policy in 2026", "short": "Aid policy 2026", "meta": "Irwin Loy & Will Worley · 2026", "module": "System shock", "accent": "#d85845", "thesis": "這不是單純的 budget crisis，而是 funding、power、risk、legitimacy 同時重新分配。", "story": "援助資金驟減後，整個 humanitarian system 被迫縮小。文章用六個趨勢說明：錢變少、private sector / AI 更深入、人道工作者面臨新的科技與政治風險、climate justice 出現制度突破、pooled funds 被當成新解法，以及 organisations 到底會不會「好好退出」。", "why": "它是八篇的入口，因為它先把 2026 的 systemic crisis 畫出來：scarcity 只是表面，真正被揭露的是誰決定 priority、誰承擔風險、誰還有 legitimacy。", "points": ["Funding cuts ≠ 單純缺錢：也會增加 remaining donors 的 leverage。", "Localisation of funding ≠ localisation of power。", "Private-sector / AI partnerships 可能提高效率，也可能產生 principles 與 legitimacy 衝突。", "Pooled funds 可能增加彈性，也可能把 governance 更集中到 UN。", "Exit strategy 不是行政尾聲，而是 humanitarian outcome 的一部分。"], "critical": "文章最重要的提醒是：危機會逼 system 做 choices，而 choices 本身就是 power politics。", "connect": ["geneva", "irc", "finance", "flex"]}, {"id": "geneva", "n": "02", "title": "International Geneva in Crisis: Where do we go from here?", "short": "International Geneva", "meta": "Edward Girardet · 15 Aug 2025", "module": "System shock", "accent": "#496e88", "thesis": "Geneva 面對的不只是 UN 裁員，而是 funding crisis、institutional reform crisis、relevance crisis 疊在一起。", "story": "美國與其他 donors 撤資，UN80 從 efficiency reform 變成大規模 downsizing。員工失去工作、外籍人才離開、local economy 受波及；同時危機也暴露 UN 長期的 duplication、political appointments、bloated administration。", "why": "它把「aid cuts」從 abstract budget 拉到一座城市的 ecosystem：jobs、schools、housing、companies、knowledge networks 都可能一起縮。", "points": ["作者支持 reform，但反對 indiscriminate downsizing。", "International Geneva 是 UN / NGO / business / research / local economy 的 ecosystem。", "Talent loss 可能不可逆：funding 回來，人不一定回來。", "問題不是要不要縮，而是能不能 smaller but better。", "De-westernize 不是趕走西方，而是重新分配 priority-setting 與 expertise。"], "critical": "這是一篇強烈 commentary；要把具體數字、匿名引述與作者的 normative judgement 分開。", "connect": ["aid2026", "portal", "civicus"]}, {"id": "irc", "n": "03", "title": "Innovation vs. Cuts: Humanitarian Aid in 2026", "short": "IRC: Cuts & Innovation", "meta": "International Rescue Committee · 2026", "module": "Operational adaptation", "accent": "#7b5aa6", "thesis": "當 funding 少了，IRC 用 cost-effectiveness、research、AI、anticipatory action 與 community delivery 重寫「有效的人道援助」。", "story": "U.S. funding freezes / terminations 讓 clinics、nutrition、education、water、protection services 中斷。IRC 的回應不是假裝 funding 沒變少，而是找替代 funding、降 delivery cost，並優先選擇 strongest track record per dollar 的 interventions。", "why": "它讓你看到大型 INGO 在 scarcity 下怎麼自我定位：從「我做很多 programme」轉成「每一美元可以產生多少 measurable impact」。", "points": ["Alma：降低 newcomers 尋找 services 的 information friction。", "Signpost：用 WhatsApp 等既有 channels 提供 localised information。", "Follow the Forecast：把 response 從災後往 anticipatory action 移。", "Malnutrition / vaccination / contraception / cash 的共同點是把服務更靠近 community / household。", "Innovation 在這裡的意思是：更早、更快、更廣、更便宜。"], "critical": "這是 IRC 自己的 advocacy / fundraising article；descriptive claims、self-evaluation、donation appeal 要分開讀。", "connect": ["aid2026", "finance", "flex"]}, {"id": "finance", "n": "04", "title": "Aid as we know it is changing – it’s time to innovate humanitarian finance", "short": "Innovative Finance", "meta": "Vanina Farber · WEF / IMD · 21 Jul 2025", "module": "Operational adaptation", "accent": "#b57d3f", "thesis": "問題不只是 funding gap，而是「不同問題是不是一直被錯誤地用同一種錢處理」。", "story": "Protracted conflicts 與 climate risk 讓 emergency、recovery、development 的界線模糊。作者用五個問題重設 humanitarian finance：要不要 repayment？誰承擔 risk？有沒有 dignity？工具適不適合 context？funding 結束後留下什麼？", "why": "它把 humanitarian reform 從「organisation 怎麼省錢」推到「financial instrument 要怎麼設計」。", "points": ["Grant 仍適合救命、無 revenue 的服務；不是所有 aid 都要 loan 化。", "Refugee business 若有收入，loan / investment 可能比一次性 grant 更可循環。", "Parametric insurance 用客觀 trigger 提前 payout，重新分配 disaster risk。", "Dignity = recipient 有 choice / control，不只是被動接受。", "Sustainability 要問 funding 停後是否留下 skills、systems、services、knowledge。"], "critical": "Innovation 也可能走向 financialisation：要反問誰會被排除、誰定義 success、private capital 拿走什麼 upside。", "connect": ["irc", "flex", "youth"]}, {"id": "portal", "n": "05", "title": "The Portal of Nations opens its doors", "short": "Portal of Nations", "meta": "City of Geneva · 7 Jun 2026", "module": "Legitimacy & public meaning", "accent": "#3b7c73", "thesis": "Portal of Nations 不只是 visitor centre，而是在把 multilateralism 從 institution 變成 public narrative。", "story": "Geneva 把 Palais des Nations 周邊的 closed-door diplomacy 翻譯成 60 分鐘、8 種語言的 immersive experience，試圖讓市民與 visitors 理解 climate、health、technology 等全球議題如何透過 international cooperation 被處理。", "why": "當前幾篇都在問 International Geneva 是否失去 relevance，這篇讓你看到另一種回應：不是只保機構，而是讓 public 看懂「這些機構為什麼值得存在」。", "points": ["Institutional presence ≠ public understanding。", "Multilateralism = 多國透過共同制度與規則處理跨國問題。", "International Geneva 也被轉化成 city identity / tourism asset。", "Public visibility 可以支持 legitimacy，但不能直接修補 funding / governance crisis。"], "critical": "這是 City of Geneva 官方宣傳；「unique」「essential」是 promotional framing，不是 independent evaluation。", "connect": ["geneva", "civicus"]}, {"id": "flex", "n": "06", "title": "Funding Civil Society Freedom", "short": "Flexible Funding", "meta": "CIVICUS · Peace Direct · 2026", "module": "Power shift", "accent": "#2f6c59", "thesis": "「錢到了 local NGO」不等於「權力到了 local NGO」；真正的 flexible funding 要讓 money 與 decision-making power 一起移動。", "story": "報告把 funding 看成 power relationship：誰定義問題、誰決定 budget、timeline、reporting、risk？它整理 Direct Champions、Connectors、Experimenters、Convener-Advocates 四種模式，展示 flexible funding 如何在不同位置改變這條 funding chain。", "why": "它把前幾篇一直出現的 localisation、dignity、risk、accountability 推到最深：不是怎麼把錢送得更快，而是誰有 authority。", "points": ["Flexible funding 常見 multiyear、adaptable、responsive、unrestricted where possible。", "Direct Champions：直接把 flexible funding 給 grassroots / movements。", "Connectors：把 Northern resources 接到更靠近 community 的 local / regional actors。", "Experimenters：在 rigid institution 裡先建立可試錯的空間。", "Convener-Advocates：透過 networks、knowledge、advocacy 改變整個 funding norm。", "Accountability 不是消失，而是從 donor-centred 走向更 community-centred。"], "critical": "報告本身是明確支持 flexible funding 的 normative study，不是四種模式的中立 impact ranking。", "connect": ["finance", "youth", "civicus"]}, {"id": "youth", "n": "07", "title": "State of Youth Civil Society 2025", "short": "Youth Civil Society", "meta": "Restless Development · 2025", "module": "Power shift", "accent": "#e06731", "thesis": "青年 civil society 的問題不只是缺錢，而是 funding insecurity、donor dependence 與「誰定義 impact」共同限制 autonomy。", "story": "報告從 Movement Building、Community Philanthropy、Impact Investment、Powershifting in Impact Measurement 到 Building Back Differently，提出一條路徑：不要只等 traditional grants，而要建立 community-rooted、trust-based、diversified resourcing。", "why": "它把 flexible funding 的權力討論放到 youth organisations 上，讓你看到小型、非正式、movement-based actors 為什麼常被傳統 grant system 排除。", "points": ["Movement ≠ formal NGO；fluid / decentralised structure 可能是 survival strategy。", "Community philanthropy 把 community 從 beneficiary 變成 co-investor。", "Participatory grantmaking 讓受影響群體直接參與資源分配。", "Powershifting in impact measurement：誰有權定義 success？", "Building Back Differently 強調 hybrid funding、autonomy、equity、collective power。"], "critical": "Community philanthropy 是 complement，不是讓政府退出 education、health、social protection 等 public responsibility。", "connect": ["flex", "finance", "civicus"]}, {"id": "civicus", "n": "08", "title": "State of Civil Society Report 2026", "short": "CIVICUS 2026", "meta": "CIVICUS · 2026", "module": "Resistance & politics", "accent": "#c8463c", "thesis": "跨民主、科技、戰爭、氣候、移民、性別與青年抗爭的共同結構，是 unaccountable power 擴張與 civil society resistance 的拉鋸。", "story": "報告用八個 themes 描寫 2025–26：democratic backsliding、tech power、global governance weakening、impunity、climate breakdown、migration cruelty、gender backlash、Gen Z protests。它不只記錄 repression，也整理 resistance 的 tactics portfolio。", "why": "它是八篇的出口：前七篇主要談 funding / institutions 怎麼變，這篇把它放回更大的 political environment——civil society 為什麼需要 autonomy，以及 autonomy 最後拿來做什麼。", "points": ["Resistance 不只是 street protest，也包括 litigation、documentation、community support、advocacy、crowdfunding、underground education。", "不同議題不能 silo：technology、migration、gender、climate、funding、democracy 彼此連動。", "Climate litigation 把 legal precedent 轉成 accountability tool。", "Gen Z organising 常見 decentralised structures、social media、assemblies、cross-border imitation。", "Funding crisis 不應逼 civil society 自我審查。"], "critical": "這是 CIVICUS 的 annual civil-society framing；它刻意從 civic space / rights / resistance 的角度選取全球案例。", "connect": ["aid2026", "geneva", "portal", "flex", "youth"]}];
+const concepts=[["Scarcity 資源稀缺", "aid2026,geneva,irc,finance", "錢變少不是背景，而是迫使 institutions 排 priority、砍 programme、改 funding model 的政治條件。"], ["Efficiency 效率", "geneva,irc,finance", "改革可以提升 value-for-money，但「效率」也可能被用來合理化 indiscriminate cuts。"], ["Localisation 在地化", "aid2026,flex,youth", "真正 localisation 不只是 local actor 執行，而是 priority、budget、risk、measurement 的權力也下移。"], ["Dignity / Agency 主體性", "finance,flex,youth", "recipient / grantee 不只是被服務或被資助的人，而應有 choice、control、co-design。"], ["Legitimacy 正當性", "aid2026,geneva,portal,civicus", "機構是否值得被信任、誰代表誰、public 是否理解它的功能，會決定 system 能不能持續。"], ["Accountability 問責", "aid2026,flex,civicus", "不是只有向 donor report；也要問對 community、rights-holders、public 如何負責。"], ["Risk 風險", "aid2026,finance,flex", "誰承擔 conflict、climate、financial、fiduciary、security risk？改革常是在重新分配 risk。"], ["Sustainability / Exit 永續與退出", "aid2026,finance,youth", "最好的 project 不是永遠不結束，而是 funding / organisation 離開後不留下 vacuum。"], ["Resistance 抵抗", "youth,civicus", "Civil society 的目的不是維持 organisation 存活本身，而是把 autonomy 轉化為 litigation、mobilisation、mutual aid、advocacy 等行動。"]];
+const quiz=[["八篇共同的最深層問題最接近哪一個？", ["如何讓 NGO 使用更多 AI？", "在資源與政治秩序改變時，誰有權決定 priority、資源、risk 與 success？", "如何讓所有援助都變成 private finance？"], 1, "核心是 power allocation。Funding、innovation、multilateralism、resistance 最後都回到誰有決策權。"], ["為什麼「funding localisation」不一定等於「power localisation」？", ["因為 local NGO 不能收外國錢", "因為錢雖到 local organisation，priority、budget、timeline、reporting 仍可能由 donor 控制", "因為 localisation 只指語言"], 1, "正確。這是 Funding Civil Society Freedom 與 Aid Policy 2026 的共同警告。"], ["IRC 與 Innovative Finance 文章最大的差異是？", ["IRC 偏 operational efficiency；Innovative Finance 進一步改問 financial instrument 怎麼設計", "兩篇完全相同", "Innovative Finance 反對所有 cash assistance"], 0, "IRC 著重 organisation 如何在 scarcity 下 delivery；Farber 則把問題推到 grant / loan / insurance / impact finance 的設計。"], ["Portal of Nations 放進這組閱讀的理由是？", ["它解決了 UN funding cuts", "它展示 public legitimacy / narrative：International Geneva 如何向一般人解釋自己的價值", "它是 humanitarian finance tool"], 1, "對。它處理的是 multilateralism 的 public meaning，而不是 budget 本身。"], ["Flexible funding 是否等於不用 accountability？", ["是", "不是；它要求重新思考 accountability 對誰、由誰定義，而非取消 accountability", "只有 youth organisations 不用"], 1, "正確。Flexible funding 是 control 的重新配置，不是無規則。"], ["State of Youth Civil Society 為什麼把 impact measurement 也視為 power issue？", ["因為 measurement 不需要 data", "因為誰定義 success、哪些 evidence 算數，本身就是權力", "因為所有 KPI 都錯"], 1, "對。Powershifting 不只改 funding allocation，也改 success 的定義權。"], ["CIVICUS 2026 如何定義 resistance？", ["只指街頭抗議", "包括 protest、litigation、documentation、community support、advocacy 等多種 tactics", "只指選舉"], 1, "對。它是一個 tactics portfolio。"], ["八篇綜合後，對 humanitarian / civil society reform 最合理的結論是？", ["只要找更多錢就能回到舊系統", "只要用 AI 就會更公平", "需要同時處理 funding quantity、financial design、institutional efficiency、local power、legitimacy、accountability 與 political space"], 2, "這就是整套閱讀的整合結論。"]];
+
+const stageInfo={
+  "System shock": "舊 funding / institutional order 開始失靈：先理解 crisis 有多深。",
+  "Operational adaptation": "大型 organisations 與 finance actors 開始用 efficiency、innovation、new instruments 回應。",
+  "Legitimacy & public meaning": "制度不只要運作，也要讓 public 理解它為什麼值得存在。",
+  "Power shift": "改革再往下一層：不是錢怎麼送，而是誰有權決定。",
+  "Resistance & politics": "Civil society 的 autonomy 最後要放回 democracy、rights、civic space 的政治環境。"
+};
+
+const glossary=[
+["humanitarian reset","在 funding crisis 下重整 UN humanitarian system 的改革 framing；不能只理解成削減預算。"],
+["localisation","把 funding、decision-making、implementation、risk 更移向 local actors；不是只把工作外包。"],
+["flexible funding","multiyear、adaptable、responsive、盡可能 unrestricted，讓 grantee 有更大 priority-setting freedom。"],
+["core / unrestricted funding","資金不被每一筆綁死在特定 activity，可支應 staff、rent、systems、security 等 organisation needs。"],
+["participatory grantmaking","讓真正受到議題影響的群體直接參與 grant allocation。"],
+["pooled funds","多個 donor 把資金集中到共同 fund 再分配；可能增加彈性，也可能集中 governance。"],
+["anticipatory action","利用 forecast / risk signals 在 crisis 前先釋出 cash 或 support，降低未來 damage。"],
+["parametric insurance","當預先設定的客觀指標（如 rainfall）達 trigger 就 payout，而非逐戶估算全部損失。"],
+["impact bond / outcome finance","只有達成事先設定 outcome 時才觸發 payment 的 financing model。"],
+["dignity / agency","人不是被動 recipient，而有 choice、control、co-design 與影響資源使用的能力。"],
+["accountability","不只是向 donor 交 report，也包括對 community、rights-holders、public 的責任。"],
+["civic space","公民組織、表達、集會與參與公共事務的空間。"],
+["democratic backsliding","民主制度與 checks and balances 逐步倒退，不一定要發生 coup。"],
+["impunity","侵害、暴力或濫權沒有受到有效究責。"],
+["multilateralism","多國透過共同制度、規則與談判處理跨國問題。"],
+["community philanthropy","把 community 的 money、skills、knowledge、diaspora、social capital 視為共同資源；community 是 co-investor 而非 passive beneficiary。"],
+["movement building","透過 shared grievance、collective vision、trust、networks 建立集體行動，不必等同 formal NGO。"],
+["power shifting","重新分配誰能定義問題、決策、分配資源、設定 success；不是只做 consultation。"]
+];
+
+const matrix={
+ aid2026:["資金急縮讓 humanitarian system 被迫縮小","reform、pooled funds、localisation、exit planning","Scarcity 下誰決定 priority、誰承擔 risk？"],
+ geneva:["International Geneva 的 funding、人才、relevance 同時流失","smaller-but-better、institutional reform、de-westernise","誰值得被保留？誰決定「有效率」？"],
+ irc:["funding cuts 讓 services 直接中斷","cost-effectiveness、AI、forecast、community delivery","每一美元最佳化會不會讓難量化需求被排除？"],
+ finance:["傳統 grant model 不適合所有長期危機","loan、insurance、impact finance、cash、blended models","誰承擔 financial risk？誰定義可投資的 impact？"],
+ portal:["public 不理解 multilateral institutions 的功能","immersive public education、city narrative","institution 如何獲得 public legitimacy？"],
+ flex:["local actors 收到錢但沒有真正 decision power","flexible/core funding、local intermediaries、mutual accountability","誰控制 priority、budget、timeline、reporting？"],
+ youth:["youth groups funding insecurity + donor dependence","community philanthropy、participatory grantmaking、impact powershifting","青年／community 能不能定義 success 與 resources？"],
+ civicus:["unaccountable power 擴張、civic space erosion","coalitions、litigation、mobilisation、documentation、community support","civil society 如何保有 autonomy 去 challenge power？"]
+};
+
+function showView(id,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.sidebtn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='library') renderLibrary();
+}
+function toggleTheme(){
+ const cur=document.documentElement.dataset.theme;
+ document.documentElement.dataset.theme=cur==='dark'?'':'dark';
+ localStorage.setItem('studyTheme',document.documentElement.dataset.theme||'light');
+}
+if(localStorage.getItem('studyTheme')==='dark')document.documentElement.dataset.theme='dark';
+
+function doneSet(){return new Set(JSON.parse(localStorage.getItem('doneReadings')||'[]'))}
+function updateProgress(){
+ const n=doneSet().size;
+ document.getElementById('progressNum').textContent=n+'/8';
+}
+function markDone(id){
+ const s=doneSet(); s.has(id)?s.delete(id):s.add(id);
+ localStorage.setItem('doneReadings',JSON.stringify([...s]));
+ updateProgress(); renderLibrary(); renderPath();
+}
+function readingById(id){return readings.find(r=>r.id===id)}
+
+function renderPath(){
+ const groups=[...new Set(readings.map(r=>r.module))];
+ let html='';
+ groups.forEach((g,gi)=>{
+   html+=`<div class="section"><span class="eyebrow">STAGE ${gi+1}</span><h2>${g}</h2><p class="muted">${stageInfo[g]||''}</p>`;
+   readings.filter(r=>r.module===g).forEach(r=>{
+     html+=`<div class="stage"><div class="stageNum">${r.n}</div><div class="stageBox"><b>${r.short}</b><p>${r.thesis}</p><button class="btn primary" onclick="openReading('${r.id}')">打開這篇 →</button></div></div>`;
+   });
+   html+='</div>';
+ });
+ document.getElementById('pathList').innerHTML=html;
+}
+
+function renderLibrary(){
+ const done=doneSet();
+ document.getElementById('libraryGrid').innerHTML=readings.map(r=>`
+ <article class="card reading-card" style="--c:${r.accent}">
+  <div class="rmeta">${r.n} · ${r.module}</div>
+  <div class="rtitle">${r.short}</div>
+  <div class="thesis">${r.thesis}</div>
+  <div class="btnrow">
+    <button class="btn primary" onclick="openReading('${r.id}')">深讀</button>
+    <button class="btn ${done.has(r.id)?'done':''}" onclick="markDone('${r.id}')">${done.has(r.id)?'✓ 已讀':'標記完成'}</button>
+  </div>
+ </article>`).join('');
+}
+
+function openReading(id){
+ showView('library');
+ const r=readingById(id); const done=doneSet().has(id);
+ const key='note_'+id; const note=localStorage.getItem(key)||'';
+ document.getElementById('articleDetail').innerHTML=`
+ <div class="article-layout">
+  <article class="card">
+   <div class="article-head" style="--c:${r.accent}">
+    <div class="num">${r.n}</div>
+    <div class="eyebrow">${r.module}</div>
+    <h2>${r.title}</h2><div class="rmeta">${r.meta}</div>
+   </div>
+   <h3>一句話抓核心</h3><p class="lead"><b>${r.thesis}</b></p>
+   <h3>這篇一路怎麼講？</h3><p>${r.story}</p>
+   <h3>為什麼它要放在這八篇裡？</h3><p>${r.why}</p>
+   <h3>真正要懂的 5 個點</h3><ul class="points">${r.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+   <div class="critical"><b>Critical lens</b><br>${r.critical}</div>
+   <h3>它跟哪幾篇最有關？</h3>
+   <div class="chips">${r.connect.map(x=>`<button class="chip" onclick="openReading('${x}')">${readingById(x).short}</button>`).join('')}</div>
+   <div class="btnrow"><button class="btn ${done?'done':''}" onclick="markDone('${r.id}');openReading('${r.id}')">${done?'✓ 已完成閱讀':'標記完成閱讀'}</button></div>
+  </article>
+  <aside class="sticky-note card">
+   <h3>我的筆記</h3>
+   <p class="small muted">只存在你的瀏覽器，不會上傳。</p>
+   <textarea class="note" id="noteArea" placeholder="寫下你自己的理解、問題、essay idea…">${note.replaceAll('&','&amp;').replaceAll('<','&lt;')}</textarea>
+   <div class="btnrow"><button class="btn primary" onclick="saveNote('${id}')">儲存筆記</button></div>
+  </aside>
+ </div>`;
+ document.getElementById('articleDetail').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function saveNote(id){localStorage.setItem('note_'+id,document.getElementById('noteArea').value);alert('筆記已儲存在這個瀏覽器。')}
+
+function renderConcepts(){
+ document.getElementById('conceptGrid').innerHTML=concepts.map(([name,ids,desc])=>{
+   const arr=ids.split(',').map(x=>readingById(x).short);
+   return `<div class="card concept-card" onclick="this.classList.toggle('open')"><b>${name}</b><div class="muted">${arr.join(' · ')}</div><div class="detail">${desc}</div></div>`;
+ }).join('');
+}
+
+function renderMatrix(){
+ const tb=document.querySelector('#matrixTable tbody');
+ tb.innerHTML=readings.map(r=>`<tr><td><b>${r.short}</b><br><span class="muted">${r.meta}</span></td><td>${matrix[r.id][0]}</td><td>${matrix[r.id][1]}</td><td>${matrix[r.id][2]}</td><td>${r.critical}</td></tr>`).join('');
+}
+
+function renderGlossary(){
+ document.getElementById('glossaryGrid').innerHTML=glossary.map(([t,d])=>`<div class="term"><b>${t}</b><div>${d}</div></div>`).join('');
+}
+
+let qi=0,score=0,answered=false;
+function renderQuiz(){
+ const [q,opts]=quiz[qi];
+ document.getElementById('quizQ').textContent=`${qi+1}/${quiz.length} ${q}`;
+ document.getElementById('quizOpts').innerHTML=opts.map((o,j)=>`<button class="qopt" onclick="answerQuiz(${j},this)">${o}</button>`).join('');
+ document.getElementById('quizFeed').textContent='';
+ document.getElementById('quizNext').style.display='none';
+ document.getElementById('quizBar').style.width=(qi/quiz.length*100)+'%';
+ answered=false;
+}
+function answerQuiz(j,btn){
+ if(answered)return; answered=true;
+ const ans=quiz[qi][2]; if(j===ans)score++;
+ document.querySelectorAll('.qopt').forEach((b,k)=>{b.disabled=true;if(k===ans)b.classList.add('good')});
+ if(j!==ans)btn.classList.add('bad');
+ document.getElementById('quizFeed').textContent=(j===ans?'✓ ':'✦ ')+quiz[qi][3];
+ document.getElementById('quizNext').style.display='inline-block';
+}
+function nextQuiz(){
+ qi++;
+ if(qi>=quiz.length){
+   document.querySelector('#view-quiz .quiz').innerHTML=`<h2>完成：${score}/${quiz.length}</h2><p>${score>=6?'你已經掌握這八篇的 analytical backbone。接下來可以用「主題統整」去準備 essay / discussion。':'建議回故事線模式，把 funding → efficiency → power → resistance 再讀一次。'}</p><button class="btn" onclick="location.reload()">重新測驗</button>`;
+ } else renderQuiz();
+}
+
+function buildSearchIndex(){
+ const idx=[];
+ readings.forEach(r=>idx.push({type:'reading',id:r.id,title:r.title,text:[r.title,r.short,r.thesis,r.story,r.why,...r.points,r.critical].join(' ')}));
+ concepts.forEach((c,i)=>idx.push({type:'concept',id:i,title:c[0],text:c.join(' ')}));
+ glossary.forEach((g,i)=>idx.push({type:'glossary',id:i,title:g[0],text:g.join(' ')}));
+ return idx;
+}
+const searchIndex=buildSearchIndex();
+const searchBox=document.getElementById('searchBox'), results=document.getElementById('searchResults');
+searchBox.addEventListener('input',e=>{
+ const q=e.target.value.trim().toLowerCase();
+ if(!q){results.classList.remove('show');results.innerHTML='';return}
+ const hit=searchIndex.filter(x=>x.text.toLowerCase().includes(q)).slice(0,12);
+ results.innerHTML=hit.length?hit.map(x=>`<div class="sitem" onclick="searchOpen('${x.type}','${x.id}')"><b>${x.title}</b><span class="muted">${x.type}</span></div>`).join(''):'<div class="sitem">找不到結果</div>';
+ results.classList.add('show');
+});
+function searchOpen(type,id){
+ results.classList.remove('show'); searchBox.value='';
+ if(type==='reading')openReading(id);
+ else if(type==='concept')showView('themes');
+ else showView('glossary');
+}
+document.addEventListener('click',e=>{if(!results.contains(e.target)&&e.target!==searchBox)results.classList.remove('show')});
+
+renderPath();renderLibrary();renderConcepts();renderMatrix();renderGlossary();renderQuiz();updateProgress();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+
+</body></html>
